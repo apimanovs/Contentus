@@ -8,5 +8,6 @@ namespace TelegramStatsBot.Database
         {
         }
 
+        public DbSet<Models.User.User> Users { get; set; } = null!;
     }
 }
