@@ -24,6 +24,8 @@
 
         public int? LastMenuMessageId { get; set; }
 
+        public bool HasSeenGuide { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
