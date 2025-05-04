@@ -19,5 +19,9 @@
         /// <param name="telegram">The Telegram ID of the user.</param>
         /// <param name="language">The selected language code (e.g., "en", "ru").</param>
         Task SetUserLanguage(long telegram, string language, bool conformed = false);
+
+        Task<Models.User.User> GetUserByTelegramIdAsync(long telegramId);
+
+        Task UpdateUserAsync(Models.User.User user);
     }
 }

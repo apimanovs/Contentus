@@ -5,6 +5,7 @@ using TelegramStatsBot.Interfaces.Callback;
 using TelegramStatsBot.Interfaces.Menu.Main;
 using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.User;
+using TelegramStatsBot.Interfaces.Menu.Guide;
 
 namespace TelegramStatsBot.Handlers.Language
 {
@@ -16,17 +17,20 @@ namespace TelegramStatsBot.Handlers.Language
         private readonly ITelegramBotClient _bot;
         private readonly IMainMenuBuilder _menuBuilder;
         private readonly IMenuService _menuService;
+        private readonly IGuideMenuBuilder _guideMenuBuilder;
 
         public LanguageCallbackHandler(
             IUserService userService,
             ITelegramBotClient bot,
             IMainMenuBuilder menuBuilder,
-            IMenuService menuService)
+            IMenuService menuService,
+            IGuideMenuBuilder guideMenuBuilder)
         {
             _userService = userService;
             _bot = bot;
             _menuBuilder = menuBuilder;
             _menuService = menuService;
+            _guideMenuBuilder = guideMenuBuilder;
         }
 
         public async Task HandleAsync(CallbackQuery query)
@@ -52,19 +56,13 @@ namespace TelegramStatsBot.Handlers.Language
 
             await _userService.SetUserLanguage(telegramId, language, true);
 
-            string confirmationText;
-            if (data.EndsWith("_keep"))
-            {
-                confirmationText = language == "ru"
+            string confirmationText = data.EndsWith("_keep")
+                ? (language == "ru"
                     ? "🇷🇺 Отлично, продолжаем на <b>Русском</b>!"
-                    : "🇬🇧 Great, continuing in <b>English</b>!";
-            }
-            else
-            {
-                confirmationText = language == "ru"
+                    : "🇬🇧 Great, continuing in <b>English</b>!")
+                : (language == "ru"
                     ? "🇷🇺 Язык установлен на <b>Русский</b>"
-                    : "🇬🇧 Language set to <b>English</b>";
-            }
+                    : "🇬🇧 Language set to <b>English</b>");
 
             await _bot.EditMessageTextAsync(
                 chatId: chatId,
@@ -73,21 +71,19 @@ namespace TelegramStatsBot.Handlers.Language
                 parseMode: ParseMode.Html
             );
 
-            var lastMenuId = await _menuService.GetLastMenuMessageId(telegramId);
-            if (lastMenuId != null)
+            var user = await _userService.GetUserByTelegramIdAsync(telegramId);
+
+            if (!user.HasSeenGuide)
             {
-                try
-                {
-                    await _bot.EditMessageReplyMarkupAsync(
-                        chatId: chatId,
-                        messageId: lastMenuId.Value,
-                        replyMarkup: null
-                    );
-                    await _menuService.ClearLastMenuMessageId(telegramId);
-                }
-                catch
-                {
-                }
+                var guideText = language == "ru"
+                    ? "🧭 Хочешь пройти краткое обучение, чтобы понять как пользоваться ботом?"
+                    : "🧭 Want to go through a short guide on how to use Teleboard?";
+
+                var guideMenu = _guideMenuBuilder.GetGuideStartMenu(language);
+
+                await _bot.SendTextMessageAsync(chatId, guideText, replyMarkup: guideMenu);
+                await _bot.AnswerCallbackQueryAsync(query.Id);
+                return;
             }
 
             var menuText = language == "ru" ? "📋 Главное меню:" : "📋 Main menu:";
@@ -99,8 +95,7 @@ namespace TelegramStatsBot.Handlers.Language
                 replyMarkup: menu
             );
 
-            _menuService.SetLastMenuMessageId(telegramId, sentMenu.MessageId);
-
+            await _menuService.SetLastMenuMessageId(telegramId, sentMenu.MessageId);
             await _bot.AnswerCallbackQueryAsync(query.Id);
         }
     }

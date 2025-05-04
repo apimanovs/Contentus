@@ -51,5 +51,16 @@ namespace TelegramStatsBot.Services.User
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<Models.User.User> GetUserByTelegramIdAsync(long telegramId)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.TelegramId == telegramId);
+        }
+
+        public async Task UpdateUserAsync(Models.User.User user)
+        { 
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+        }
     }
 }

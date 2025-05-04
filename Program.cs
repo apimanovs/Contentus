@@ -13,6 +13,9 @@ using TelegramStatsBot.Services.Menu;
 using TelegramStatsBot.Builders.Menu;
 using TelegramStatsBot.Dispatchers.Callback;
 using TelegramStatsBot.Dispatchers.Message;
+using TelegramStatsBot.Interfaces.Menu.Guide;
+using TelegramStatsBot.Builders.Menu.Guide;
+using TelegramStatsBot.Handlers.Guide;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +38,9 @@ builder.Services.AddScoped<IMessageHandler, StartCommandHandler>();
 builder.Services.AddScoped<ICallbackHandler, LanguageCallbackHandler>();
 builder.Services.AddScoped<IMainMenuBuilder, MainMenuBuilder>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IGuideMenuBuilder, GuideMenuBuilder>();
+builder.Services.AddScoped<ICallbackHandler, GuideStepHandler>();
+
 
 builder.Services.AddScoped<MessageDispatcher>();
 builder.Services.AddScoped<CallbackDispatcher>();

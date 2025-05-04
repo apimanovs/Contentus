@@ -8,12 +8,10 @@ namespace TelegramStatsBot.Builders.Menu
     public class MainMenuBuilder : IMainMenuBuilder
     {
         private readonly ITelegramBotClient _bot;
-        private readonly IMenuService _menuService;
 
-        public MainMenuBuilder(ITelegramBotClient bot, IMenuService menuService)
+        public MainMenuBuilder(ITelegramBotClient bot)
         {
             _bot = bot;
-            _menuService = menuService;
         }
 
         public InlineKeyboardMarkup GetMainMenu(string language)
