@@ -35,7 +35,22 @@ namespace TelegramStatsBot.Handlers.Commands
             var telegramId = message.From.Id;
             var chatId = message.Chat.Id;
 
-            var user = await _userService.RegisterUserAsync(
+            var user = await _userService.GetUserByTelegramIdAsync(telegramId);
+
+            if (user == null)
+            {
+                var welcomeText = message.From.LanguageCode?.ToLower() == "ru"
+                                ? "👋 Привет!"
+                                : "👋 Hello!";
+
+                await _bot.SendTextMessageAsync(
+                    chatId: chatId,
+                    text: welcomeText,
+                    parseMode: ParseMode.Html
+                );
+            }
+
+             user = await _userService.RegisterUserAsync(
                 telegramId: telegramId,
                 chatId: chatId,
                 username: message.From.Username
@@ -64,8 +79,8 @@ namespace TelegramStatsBot.Handlers.Commands
                 await _userService.SetUserLanguage(telegramId, detectedLang);
 
                 var text = detectedLang == "ru"
-                    ? "👋 <b>Привет, я Teleboard!</b>\r\nЯ помогу тебе отслеживать рост подписчиков, охваты постов и активность аудитории прямо в Telegram.\r\nЯ заметил, что ты говоришь на <b>Русском</b>.\r\nОставим этот язык или выберем английский? 🌍"
-                    : "👋 <b>Hi, I'm Teleboard!</b>\r\nI help you track subscriber growth, post reach and engagement — all inside Telegram.\r\nLooks like you're using <b>English</b>.\r\nShall we keep this language or switch to Russian? 🌍";
+                    ? "👨🏽‍💼 Я помогу тебе отслеживать рост подписчиков, охваты постов и активность аудитории прямо в Telegram.\r\nЯ заметил, что ты говоришь на <b>Русском</b>.\r\nОставим этот язык или выберем английский? 🌍"
+                    : "👨🏽‍💼 I help you track subscriber growth, post reach and engagement — all inside Telegram.\r\nLooks like you're using <b>English</b>.\r\nShall we keep this language or switch to Russian? 🌍";
 
                 var keyboard = new InlineKeyboardMarkup(new[]
                 {

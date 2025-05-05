@@ -22,20 +22,21 @@ namespace TelegramStatsBot.Builders.Menu
             {
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData(isRu ? "➕ Добавить" : "➕ Add", "menu_add"),
-                },
+                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
+                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
+                },                
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData(isRu ? "📊 Отчёт" : "📊 Report", "menu_report")
-                },
+                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
+                },                
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData("➕ Добавить счёт", "account_create")
-                },
+                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
+                },                
                 new[]
                 {
-                    InlineKeyboardButton.WithCallbackData(isRu ? "⚙️ Настройки" : "⚙️ Settings", "menu_settings")
-                }
+                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
+                },
             });
         }
     }

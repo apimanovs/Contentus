@@ -68,11 +68,24 @@ namespace TelegramStatsBot.Handlers.Guide
                 case 4:
                     user.HasSeenGuide = true;
                     await _userService.UpdateUserAsync(user);
+
                     text = user.Language == "ru"
                         ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
                         : "✅ <b>All done!</b>\nYou can now use all features of Teleboard!";
+
                     keyboard = _mainMenuBuilder.GetMainMenu(user.Language);
-                    break;
+
+                    await _bot.EditMessageTextAsync(
+                        chatId: chatId,
+                        messageId: query.Message.MessageId,
+                        text: text,
+                        parseMode: ParseMode.Html,
+                        replyMarkup: keyboard
+                    );
+
+                    await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);
+
+                    return;
 
                 default:
                     text = "❌ Unknown step.";
@@ -86,7 +99,6 @@ namespace TelegramStatsBot.Handlers.Guide
                 text: text,
                 parseMode: ParseMode.Html,
                 replyMarkup: keyboard);
-
         }
     }
 

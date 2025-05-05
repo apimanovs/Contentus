@@ -38,6 +38,17 @@ namespace TelegramStatsBot.Builders.Menu.Guide
             var isRu = language == "ru";
             var buttons = new List<InlineKeyboardButton[]>();
 
+            if (step < 4)
+            {
+                buttons.Add(new[]
+                {
+                    InlineKeyboardButton.WithCallbackData(
+                        isRu ? "⏭ Далее" : "⏭ Next",
+                        $"guide_step:{step + 1}"
+                    )
+                });
+            }
+
             if (step > 1)
             {
                 buttons.Add(new[]
@@ -49,17 +60,7 @@ namespace TelegramStatsBot.Builders.Menu.Guide
                 });
             }
 
-            if (step < 4)
-            {
-                buttons.Add(new[]
-                {
-                    InlineKeyboardButton.WithCallbackData(
-                        isRu ? "⏭ Далее" : "⏭ Next",
-                        $"guide_step:{step + 1}"
-                    )
-                });
-            }
-            else
+            if (step == 4)
             {
                 buttons.Add(new[]
                 {
