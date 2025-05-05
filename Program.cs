@@ -40,6 +40,7 @@ builder.Services.AddScoped<IMainMenuBuilder, MainMenuBuilder>();
 builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IGuideMenuBuilder, GuideMenuBuilder>();
 builder.Services.AddScoped<ICallbackHandler, GuideStepHandler>();
+builder.Services.AddScoped<ICallbackHandler, GuideSkipHandler>();
 
 
 builder.Services.AddScoped<MessageDispatcher>();

@@ -6,6 +6,7 @@ using TelegramStatsBot.Interfaces.Menu.Main;
 using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.Message;
 using TelegramStatsBot.Interfaces.User;
+using TelegramStatsBot.Interfaces.Menu.Guide;
 
 namespace TelegramStatsBot.Handlers.Commands
 {
@@ -17,17 +18,20 @@ namespace TelegramStatsBot.Handlers.Commands
         private readonly ITelegramBotClient _bot;
         private readonly IMainMenuBuilder _menuBuilder;
         private readonly IMenuService _menuService;
+        private readonly IGuideMenuBuilder _guideMenuBuilder;
 
         public StartCommandHandler(
             IUserService userService,
             ITelegramBotClient bot,
             IMainMenuBuilder menuBuilder,
-            IMenuService menuService)
+            IMenuService menuService,
+            IGuideMenuBuilder guideMenuBuilder)
         {
             _userService = userService;
             _bot = bot;
             _menuBuilder = menuBuilder;
             _menuService = menuService;
+            _guideMenuBuilder = guideMenuBuilder;
         }
 
         public async Task HandleAsync(Message message)
@@ -108,16 +112,36 @@ namespace TelegramStatsBot.Handlers.Commands
                 return;
             }
 
+            if (user.HasSeenGuide == false)
+            {
+                var guideText = user.Language == "ru"
+                     ? "🧭 Хочешь пройти краткое обучение, чтобы понять как пользоваться ботом?"
+                     : "🧭 Want to go through a short guide on how to use Teleboard?";
+
+                var guideMenu = _guideMenuBuilder.GetGuideStartMenu(user.Language);
+
+                var sent = await _bot.SendTextMessageAsync(
+                     chatId: chatId,
+                     text: guideText,
+                     parseMode: ParseMode.Html,
+                     replyMarkup: guideMenu
+                );
+
+                await _menuService.SetLastMenuMessageId(telegramId, sent.MessageId);
+
+                return;
+            }
+
             var menuText = user.Language == "ru" ? "📋 Главное меню:" : "📋 Main menu:";
             var menu = _menuBuilder.GetMainMenu(user.Language);
 
-            var sentMenu = await _bot.SendTextMessageAsync(
-                chatId: chatId,
-                text: menuText,
-                replyMarkup: menu
-            );
+             var sentMenu = await _bot.SendTextMessageAsync(
+                 chatId: chatId,
+                 text: menuText,
+                 replyMarkup: menu
+             );
 
-            await _menuService.SetLastMenuMessageId(telegramId, sentMenu.MessageId);
+             await _menuService.SetLastMenuMessageId(telegramId, sentMenu.MessageId);
         }
     }
 }

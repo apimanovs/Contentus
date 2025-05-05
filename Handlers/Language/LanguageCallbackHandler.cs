@@ -81,7 +81,22 @@ namespace TelegramStatsBot.Handlers.Language
 
                 var guideMenu = _guideMenuBuilder.GetGuideStartMenu(language);
 
-                await _bot.SendTextMessageAsync(chatId, guideText, replyMarkup: guideMenu);
+                var lastMenuId = await _menuService.GetLastMenuMessageId(telegramId);
+                
+                if (lastMenuId != null)
+                {
+                    try
+                    {
+                        await _bot.EditMessageReplyMarkupAsync(chatId, lastMenuId.Value, null);
+                        await _menuService.ClearLastMenuMessageId(telegramId);
+                    }
+                    catch { }
+                }
+
+                var sent = await _bot.SendTextMessageAsync(chatId, guideText, replyMarkup: guideMenu);
+
+                await _menuService.SetLastMenuMessageId(telegramId, sent.MessageId);
+
                 await _bot.AnswerCallbackQueryAsync(query.Id);
                 return;
             }
