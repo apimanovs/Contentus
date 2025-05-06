@@ -18,10 +18,17 @@ namespace TelegramStatsBot.Dispatchers.Message
             if (msg?.Text == null) return;
 
             var handler = _handlers.FirstOrDefault(h => h.Command == msg.Text);
+
+            if (handler == null)
+            {
+                handler = _handlers.FirstOrDefault(h => string.IsNullOrWhiteSpace(h.Command));
+            }
+
             if (handler != null)
             {
                 await handler.HandleAsync(msg);
             }
         }
+
     }
 }

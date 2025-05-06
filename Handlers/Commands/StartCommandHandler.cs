@@ -7,6 +7,8 @@ using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.Message;
 using TelegramStatsBot.Interfaces.User;
 using TelegramStatsBot.Interfaces.Menu.Guide;
+using TelegramStatsBot.Enums.Onboarding;
+using Telegram.Bot.Requests;
 
 namespace TelegramStatsBot.Handlers.Commands
 {
@@ -129,6 +131,16 @@ namespace TelegramStatsBot.Handlers.Commands
 
                 await _menuService.SetLastMenuMessageId(telegramId, sent.MessageId);
 
+                return;
+            }
+
+            if (user.CurrentStep == OnboardingStep.AwaitingChannelLink)
+            {
+                var text = user.Language == "ru"
+                      ? "📡 Добавь меня в админы своего канала и отправь ссылку сюда, чтобы я начал собирать статистику. Например:\n\nhttps://t.me/yourchannel"
+                      : "📡 Add me to your channel as an admin and send the link here to start tracking. For example:\n\nhttps://t.me/yourchannel";
+
+                await _bot.SendTextMessageAsync(chatId, text);
                 return;
             }
 

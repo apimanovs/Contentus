@@ -7,6 +7,8 @@ using TelegramStatsBot.Interfaces.Menu.Guide;
 using TelegramStatsBot.Interfaces.User;
 using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.Menu.Main;
+using TelegramStatsBot.Enums.Onboarding;
+using Microsoft.IdentityModel.Tokens;
 
 namespace TelegramStatsBot.Handlers.Guide
 {
@@ -67,6 +69,8 @@ namespace TelegramStatsBot.Handlers.Guide
 
                 case 4:
                     user.HasSeenGuide = true;
+                    user.CurrentStep = OnboardingStep.AwaitingChannelLink;
+
                     await _userService.UpdateUserAsync(user);
 
                     text = user.Language == "ru"
@@ -85,7 +89,14 @@ namespace TelegramStatsBot.Handlers.Guide
 
                     await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);
 
+                    var askChannelText = user.Language == "ru"
+                        ? "📡 Пожалуйста, пришли ссылку на канал, чтобы мы могли начать работу."
+                        : "📡 Please send the link to your channel so we can get started.";
+
+                    await _bot.SendTextMessageAsync(chatId, askChannelText);
+
                     return;
+
 
                 default:
                     text = "❌ Unknown step.";

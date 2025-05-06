@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TelegramStatsBot.Database;
 
@@ -11,9 +12,11 @@ using TelegramStatsBot.Database;
 namespace TelegramStatsBot.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250505151632_AddOnboardingStepRow")]
+    partial class AddOnboardingStepRow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,14 +36,12 @@ namespace TelegramStatsBot.Migrations
                     b.Property<long>("ChannelId")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("ChannelLink")
+                    b.Property<string>("ChannelTitle")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ChannelTitle")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("ChannelUsername")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsBotAdmin")
@@ -48,6 +49,9 @@ namespace TelegramStatsBot.Migrations
 
                     b.Property<DateTime>("LinkedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<long>("TelegramUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");

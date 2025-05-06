@@ -1,4 +1,6 @@
-﻿namespace TelegramStatsBot.Models.User
+﻿using TelegramStatsBot.Enums.Onboarding;
+
+namespace TelegramStatsBot.Models.User
 {
     public class User
     {
@@ -27,5 +29,7 @@
         public bool HasSeenGuide { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public OnboardingStep CurrentStep { get; set; } = OnboardingStep.None;
     }
 }
