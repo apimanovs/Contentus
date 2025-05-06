@@ -14,7 +14,7 @@ namespace TelegramStatsBot.Models.Channel
         public long ChannelId { get; set; }
 
         public bool IsBotAdmin { get; set; }
-        public string ChannelLink { get; set; } = string.Empty;
+        public string? ChannelLink { get; set; } = string.Empty;
         public DateTime LinkedAt { get; set; } = DateTime.UtcNow;
     }
 }

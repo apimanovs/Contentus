@@ -90,8 +90,9 @@ namespace TelegramStatsBot.Handlers.Guide
                     await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);
 
                     var askChannelText = user.Language == "ru"
-                        ? "📡 Пожалуйста, пришли ссылку на канал, чтобы мы могли начать работу."
-                        : "📡 Please send the link to your channel so we can get started.";
+                        ? "📥 Перешли любое сообщение из своего канала, где я уже добавлен в администраторы. Так я смогу начать сбор статистики. Это важно. Не ленись."
+                        : "📥 Please forward *any* message from your channel where I’m already an admin. This is how I can start tracking stats. Don’t make it weird.";
+
 
                     await _bot.SendTextMessageAsync(chatId, askChannelText);
 

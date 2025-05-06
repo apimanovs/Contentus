@@ -19,6 +19,10 @@ using TelegramStatsBot.Handlers.Guide;
 using TelegramStatsBot.Handlers.Channel;
 using TelegramStatsBot.Interfaces.Channel;
 using TelegramStatsBot.Services.Channel;
+using TelegramStatsBot.Interfaces.Forward.Handler;
+using TelegramStatsBot.Handlers.Forwarded;
+using TelegramStatsBot.Interfaces.Forward.Service;
+using TelegramStatsBot.Services.Forward;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +50,8 @@ builder.Services.AddScoped<IGuideMenuBuilder, GuideMenuBuilder>();
 builder.Services.AddScoped<ICallbackHandler, GuideStepHandler>();
 builder.Services.AddScoped<ICallbackHandler, GuideSkipHandler>();
 builder.Services.AddScoped<IChannelService, ChannelService>();
+builder.Services.AddScoped<IForwardedMessageHandler, ForwardedMessageHandler>();
+builder.Services.AddScoped<IForwardChannelMessageService, ForwardChannelMessageService>();
 
 
 builder.Services.AddScoped<MessageDispatcher>();

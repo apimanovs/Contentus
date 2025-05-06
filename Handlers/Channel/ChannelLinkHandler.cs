@@ -48,6 +48,7 @@ namespace TelegramStatsBot.Handlers.Channel
                 return;
             }
 
+            var chat = await _bot.GetChatAsync(link);
 
             var result = await _channelService.AddChannelAsync(link, user.Id);
 
