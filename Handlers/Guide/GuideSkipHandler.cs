@@ -5,6 +5,7 @@ using TelegramStatsBot.Interfaces.Menu.Main;
 using TelegramStatsBot.Interfaces.User;
 using TelegramStatsBot.Interfaces.Menu;
 using Telegram.Bot.Types.Enums;
+using TelegramStatsBot.Enums.Onboarding;
 
 public class GuideSkipHandler : ICallbackHandler
 {
@@ -31,6 +32,16 @@ public class GuideSkipHandler : ICallbackHandler
         var user = await _userService.GetUserByTelegramIdAsync(telegramId);
         user.HasSeenGuide = true;
         await _userService.UpdateUserAsync(user);
+
+        user.CurrentStep = OnboardingStep.AwaitingChannelLink;
+        await _userService.UpdateUserAsync(user);
+
+        var askChannelText = user.Language == "ru"
+            ? "📥 Перешли сообщение из канала, где я админ. Так я начну сбор статистики. Без этого меню будет бесполезным."
+            : "📥 Please forward a message from the channel where I’m admin. Otherwise, this menu is just for show.";
+
+        await _bot.SendTextMessageAsync(chatId, askChannelText);
+
 
         var menu = _menuBuilder.GetMainMenu(user.Language);
         var menuText = user.Language == "ru" ? "📋 Главное меню:" : "📋 Main menu:";

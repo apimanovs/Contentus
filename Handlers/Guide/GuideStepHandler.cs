@@ -77,14 +77,12 @@ namespace TelegramStatsBot.Handlers.Guide
                         ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
                         : "✅ <b>All done!</b>\nYou can now use all features of Teleboard!";
 
-                    keyboard = _mainMenuBuilder.GetMainMenu(user.Language);
-
                     await _bot.EditMessageTextAsync(
                         chatId: chatId,
                         messageId: query.Message.MessageId,
                         text: text,
                         parseMode: ParseMode.Html,
-                        replyMarkup: keyboard
+                        replyMarkup: null
                     );
 
                     await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);
