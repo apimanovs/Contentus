@@ -6,6 +6,7 @@ using TelegramStatsBot.Interfaces.User;
 using TelegramStatsBot.Interfaces.Menu;
 using Telegram.Bot.Types.Enums;
 using TelegramStatsBot.Enums.Onboarding;
+using static System.Net.Mime.MediaTypeNames;
 
 public class GuideSkipHandler : ICallbackHandler
 {
@@ -43,15 +44,16 @@ public class GuideSkipHandler : ICallbackHandler
         await _bot.SendTextMessageAsync(chatId, askChannelText);
 
 
-        var menu = _menuBuilder.GetMainMenu(user.Language);
-        var menuText = user.Language == "ru" ? "📋 Главное меню:" : "📋 Main menu:";
+        var text = user.Language == "ru"
+            ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
+            : "✅ <b>All done!</b>\nYou can now use all features of Teleboard!";
 
         await _bot.EditMessageTextAsync(
             chatId: chatId,
             messageId: query.Message.MessageId,
-            text: menuText,
+            text: text,
             parseMode: ParseMode.Html,
-            replyMarkup: menu
+            replyMarkup: null
         );
 
         await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);

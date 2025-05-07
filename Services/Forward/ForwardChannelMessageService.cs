@@ -35,7 +35,16 @@ namespace TelegramStatsBot.Services.Forward
 
             var botInfo = await _bot.GetMeAsync();
 
-            var admins = await _bot.GetChatAdministratorsAsync(chat.Id);
+            IEnumerable<ChatMember> admins;
+            try
+            {
+                admins = await _bot.GetChatAdministratorsAsync(chat.Id);
+            }
+            catch (Exception ex)
+            {
+                return OperationResult<Models.Channel.Channel>.Fail(
+                    "⚠️ Я не могу получить список админов. Вероятно, меня нет в этом канале или у меня нет прав администратора.");
+            }
 
             var botAdmin = admins
                 .OfType<Telegram.Bot.Types.ChatMemberAdministrator>()
