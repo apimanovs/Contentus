@@ -9,6 +9,7 @@ using TelegramStatsBot.Interfaces.User;
 using TelegramStatsBot.Interfaces.Menu.Guide;
 using TelegramStatsBot.Enums.Onboarding;
 using Telegram.Bot.Requests;
+using TelegramStatsBot.Texsts.Menu;
 
 namespace TelegramStatsBot.Handlers.Commands
 {
@@ -144,7 +145,7 @@ namespace TelegramStatsBot.Handlers.Commands
                 return;
             }
 
-            var menuText = user.Language == "ru" ? "📋 Главное меню:" : "📋 Main menu:";
+            var menuText = MenuTexts.GetMainMenuTitle(user.Language);
             var menu = _menuBuilder.GetMainMenu(user.Language);
 
              var sentMenu = await _bot.SendTextMessageAsync(

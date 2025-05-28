@@ -7,6 +7,7 @@ using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.Menu.Main;
 using TelegramStatsBot.Interfaces.User;
 using TelegramStatsBot.Models.Result;
+using TelegramStatsBot.Texsts.Menu;
 
 namespace TelegramStatsBot.Handlers.Forwarded
 {
@@ -56,7 +57,7 @@ namespace TelegramStatsBot.Handlers.Forwarded
 
 
             var keyboard = _mainMenuBuilder.GetMainMenu(user.Language);
-            var menuText = user.Language == "ru" ? "📋 Главное меню:" : "📋 Main menu:";
+            var menuText = MenuTexts.GetMainMenuTitle(user.Language);
 
             var sent = await _bot.SendTextMessageAsync(
                 chatId: message.Chat.Id,
