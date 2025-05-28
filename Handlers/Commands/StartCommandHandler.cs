@@ -135,16 +135,6 @@ namespace TelegramStatsBot.Handlers.Commands
                 return;
             }
 
-            if (user.CurrentStep == OnboardingStep.AwaitingChannelLink)
-            {
-                var text = user.Language == "ru"
-                      ? "📡 Добавь меня в админы своего канала и отправь ссылку сюда, чтобы я начал собирать статистику. Например:\n\nhttps://t.me/yourchannel"
-                      : "📡 Add me to your channel as an admin and send the link here to start tracking. For example:\n\nhttps://t.me/yourchannel";
-
-                await _bot.SendTextMessageAsync(chatId, text);
-                return;
-            }
-
             var menuText = MenuTexts.GetMainMenuTitle(user.Language);
             var menu = _menuBuilder.GetMainMenu(user.Language);
 
