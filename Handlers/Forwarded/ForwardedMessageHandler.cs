@@ -46,9 +46,11 @@ namespace TelegramStatsBot.Handlers.Forwarded
                 return;
             }
 
+            string? channelTitle = message.ForwardFromChat.Title;
+
             var successText = user.Language == "ru"
-                ? "🎉 Канал успешно добавлен по пересланному сообщению!"
-                : "🎉 Channel successfully linked via forwarded message!";
+                ? $"🎉 Канал {channelTitle} успешно добавлен по пересланному сообщению!"
+                : $"🎉 Channel {channelTitle} successfully linked via forwarded message!";
 
             await _bot.SendTextMessageAsync(message.Chat.Id, successText);
 
