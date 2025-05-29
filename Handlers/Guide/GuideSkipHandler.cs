@@ -41,16 +41,11 @@ public class GuideSkipHandler : ICallbackHandler
                     ? "✅ <b>Обучение пропущено!</b>\nТеперь давай расскажи немного о своём канале, чтобы я мог начать помогать с контентом."
                     : "✅ <b>Guide skipped!</b>\nNow tell me a bit about your channel so I can start helping you with content.";
 
-        await _bot.SendTextMessageAsync(chatId, confirmationText);
-
-        var text = user.Language == "ru"
-            ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
-            : "✅ <b>All done!</b>\nYou can now use all features of Teleboard!";
 
         await _bot.EditMessageTextAsync(
             chatId: chatId,
             messageId: query.Message.MessageId,
-            text: text,
+            text: confirmationText,
             parseMode: ParseMode.Html,
             replyMarkup: null
         );

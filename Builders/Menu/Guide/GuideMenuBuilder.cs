@@ -38,7 +38,7 @@ namespace TelegramStatsBot.Builders.Menu.Guide
             var isRu = language == "ru";
             var buttons = new List<InlineKeyboardButton[]>();
 
-            if (step < 4)
+            if (step < 5)
             {
                 buttons.Add(new[]
                 {
@@ -60,7 +60,7 @@ namespace TelegramStatsBot.Builders.Menu.Guide
                 });
             }
 
-            if (step == 4)
+            if (step == 5)
             {
                 buttons.Add(new[]
                 {
