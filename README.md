@@ -29,20 +29,6 @@ It’s like a copywriter that doesn’t charge hourly.
 
 ---
 
-## 🧰 Features
-
-| Feature                     | Description |
-|----------------------------|-------------|
-| 🗂️ Channel Profiles         | Save tone, topic, goals per channel |
-| ✍️ Post Generator           | Turn ideas into polished content |
-| 🪄 Rewrite Tools            | Shorten, stylize, or add emotion |
-| 💡 Weekly Ideas             | Auto-generate content plans |
-| 🧠 Headline Machine         | 10+ headline variants with filters |
-| 🧪 Fake A/B Analyzer        | Compare two titles — get smart guesses |
-| 🔄 Post Adaptation          | Rewrite same idea for another channel |
-
----
-
 ## ⚙️ Tech Stack
 
 - **.NET / C#**  
@@ -51,12 +37,3 @@ It’s like a copywriter that doesn’t charge hourly.
 - Optionally: **Anthropic Claude API**  
 - Data: **SQLite** (for MVP), PostgreSQL later
 
----
-
-## 🚀 Getting Started (Dev)
-
-```bash
-git clone https://github.com/YOUR_USERNAME/Contentus.git
-cd Contentus
-dotnet restore
-dotnet run
