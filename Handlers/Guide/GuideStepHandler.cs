@@ -69,13 +69,13 @@ namespace TelegramStatsBot.Handlers.Guide
 
                 case 4:
                     user.HasSeenGuide = true;
-                    user.CurrentStep = OnboardingStep.AwaitingChannelLink;
+                    user.CurrentStep = OnboardingStep.AddingChannel;
 
                     await _userService.UpdateUserAsync(user);
 
                     text = user.Language == "ru"
-                        ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
-                        : "✅ <b>All done!</b>\nYou can now use all features of Teleboard!";
+                                    ? "✅ <b>Обучение пройдено!</b>\nТеперь давай расскажи мне немного о твоём канале, чтобы я мог создавать контент именно под него."
+                                    : "✅ <b>You're all set!</b>\nNow tell me a bit about your channel so I can start generating content tailored to it.";
 
                     await _bot.EditMessageTextAsync(
                         chatId: chatId,

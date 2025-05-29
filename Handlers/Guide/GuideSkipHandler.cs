@@ -34,15 +34,14 @@ public class GuideSkipHandler : ICallbackHandler
         user.HasSeenGuide = true;
         await _userService.UpdateUserAsync(user);
 
-        user.CurrentStep = OnboardingStep.AwaitingChannelLink;
+        user.CurrentStep = OnboardingStep.AddingChannel;
         await _userService.UpdateUserAsync(user);
 
-        var askChannelText = user.Language == "ru"
-            ? "📥 Перешли сообщение из канала, где я админ. Так я начну сбор статистики. Без этого меню будет бесполезным."
-            : "📥 Please forward a message from the channel where I’m admin. Otherwise, this menu is just for show.";
+        var confirmationText = user.Language == "ru"
+                    ? "✅ <b>Обучение пропущено!</b>\nТеперь давай расскажи немного о своём канале, чтобы я мог начать помогать с контентом."
+                    : "✅ <b>Guide skipped!</b>\nNow tell me a bit about your channel so I can start helping you with content.";
 
-        await _bot.SendTextMessageAsync(chatId, askChannelText);
-
+        await _bot.SendTextMessageAsync(chatId, confirmationText);
 
         var text = user.Language == "ru"
             ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
