@@ -62,5 +62,10 @@ namespace TelegramStatsBot.Services.User
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> HasAnyChannels(int userId)
+        {
+            return await _context.Channels.AnyAsync(c => c.UserId == userId);
+        }
     }
 }

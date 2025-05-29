@@ -23,5 +23,7 @@
         Task<Models.User.User> GetUserByTelegramIdAsync(long telegramId);
 
         Task UpdateUserAsync(Models.User.User user);
+
+        Task<bool> HasAnyChannels(int userId);
     }
 }

@@ -9,6 +9,7 @@ using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.Menu.Main;
 using TelegramStatsBot.Enums.Onboarding;
 using Microsoft.IdentityModel.Tokens;
+using TelegramStatsBot.Texsts.Menu;
 
 namespace TelegramStatsBot.Handlers.Guide
 {
@@ -93,8 +94,21 @@ namespace TelegramStatsBot.Handlers.Guide
 
                     await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);
 
-                    return;
 
+                    text = user.Language == "ru"
+                                    ? "🚀 Готово начать? \n\nДобавь свой первый канал, чтобы я мог подстроиться под твою аудиторию и начать помогать с контентом. Без этого — ни идей, ни постов. Только тишина и упрёки совести."
+                                    : "🚀 Ready to roll?\n\nAdd your first channel so I can tune into your audience and start helping with content. Without it — no posts, no ideas. Just silence and existential guilt.";
+
+                    var hasChannels = await _userService.HasAnyChannels(user.Id);
+                    var menu = _mainMenuBuilder.GetMainMenu(user.Language, hasChannels);
+
+                    await _bot.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: text,
+                        replyMarkup: menu
+                    );
+                    
+                    return;
 
                 default:
                     text = "❌ Unknown step.";
