@@ -33,6 +33,6 @@ namespace TelegramStatsBot.Models.User
 
         public OnboardingStep CurrentStep { get; set; } = OnboardingStep.None;
 
-        public ChannelDetaildSteps ChannelDetailsStep { get; set; } = ChannelDetaildSteps.None;
+        public ChannelDetailsSteps ChannelDetailsStep { get; set; } = ChannelDetailsSteps.None;
     }
 }

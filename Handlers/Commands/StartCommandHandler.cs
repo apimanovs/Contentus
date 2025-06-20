@@ -136,6 +136,21 @@ namespace TelegramStatsBot.Handlers.Commands
                 return;
             }
 
+            if (user.CurrentStep == OnboardingStep.AddingChannel)
+            {
+                var text = user.Language == "ru"
+                    ? "📩 Пожалуйста, <b>перешли сюда любое сообщение из своего канала</b> — это поможет мне определить канал и продолжить настройку. Без этого я не смогу работать с твоим контентом."
+                    : "📩 Please <b>forward any message from your channel</b> — this helps me identify your channel and continue the setup. Without it, I can't work with your content.";
+
+                await _bot.SendTextMessageAsync(
+                    chatId,
+                    text,
+                    parseMode: ParseMode.Html
+                );
+
+                return;
+            }
+
             var hasChannels = await _userService.HasAnyChannels(user.Id);
 
             var menuText = MenuTexts.GetMainMenuTitle(user.Language, hasChannels);

@@ -1,6 +1,6 @@
 ﻿namespace TelegramContentusBot.Enums.ChannelDetails
 {
-    public enum ChannelDetaildSteps
+    public enum ChannelDetailsSteps
     {
         None = 0,
         About = 1,

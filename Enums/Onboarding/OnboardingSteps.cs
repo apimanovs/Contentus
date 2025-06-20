@@ -3,6 +3,6 @@
     public enum OnboardingStep
     {
         None = 0,
-        AddingChannel = 1
+        AddingChannel = 1,
     }
 }

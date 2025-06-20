@@ -10,8 +10,10 @@ namespace TelegramStatsBot.Models.Channel
         public int UserId { get; set; }
         public User.User User { get; set; }
 
+        public string? ChannelUsername { get; set; }
         public string? ChannelTitle { get; set; }
-
+        public string? ChannelLink { get; set; }
+        public long ChannelId { get; set; }
         public bool IsBotAdmin { get; set; }
 
         public string? About { get; set; }
@@ -26,6 +28,6 @@ namespace TelegramStatsBot.Models.Channel
 
         public DateTime LinkedAt { get; set; } = DateTime.UtcNow;
 
-        public ChannelDetaildSteps ChannelDetailsStep { get; set; } = ChannelDetaildSteps.None;
+        public ChannelDetailsSteps ChannelDetailsStep { get; set; } = ChannelDetailsSteps.None;
     }
 }
