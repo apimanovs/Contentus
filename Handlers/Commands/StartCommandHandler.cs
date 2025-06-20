@@ -136,9 +136,10 @@ namespace TelegramStatsBot.Handlers.Commands
                 return;
             }
 
-            var menuText = MenuTexts.GetMainMenuTitle(user.Language);
-
             var hasChannels = await _userService.HasAnyChannels(user.Id);
+
+            var menuText = MenuTexts.GetMainMenuTitle(user.Language, hasChannels);
+
             var menu = _menuBuilder.GetMainMenu(user.Language, hasChannels);
 
              var sentMenu = await _bot.SendTextMessageAsync(
