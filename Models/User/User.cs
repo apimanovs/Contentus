@@ -1,4 +1,5 @@
-﻿using TelegramStatsBot.Enums.Onboarding;
+﻿using TelegramContentusBot.Enums.ChannelDetails;
+using TelegramStatsBot.Enums.Onboarding;
 
 namespace TelegramStatsBot.Models.User
 {
@@ -31,5 +32,7 @@ namespace TelegramStatsBot.Models.User
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public OnboardingStep CurrentStep { get; set; } = OnboardingStep.None;
+
+        public ChannelDetaildSteps ChannelDetailsStep { get; set; } = ChannelDetaildSteps.None;
     }
 }
