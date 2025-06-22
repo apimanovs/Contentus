@@ -78,7 +78,7 @@ namespace TelegramStatsBot.Handlers.Commands
                 catch { }
             }
 
-            if (string.IsNullOrEmpty(user.Language) || !user.IsLanguageConfirmed)
+            if (string.IsNullOrEmpty(user.Language) || user.IsLanguageConfirmed == false)
             {
                 var systemLang = message.From.LanguageCode?.ToLower() ?? "en";
                 var detectedLang = systemLang.StartsWith("ru") ? "ru" : "en";
