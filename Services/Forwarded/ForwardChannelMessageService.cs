@@ -23,7 +23,7 @@ namespace TelegramStatsBot.Services.Forwarded
 
         public async Task<OperationResult<Models.Channel.Channel>> ProcessForwardedChannelAsync(Telegram.Bot.Types.Message message, int userId)
         {
-            var user = await _userService.GetUserByTelegramIdAsync(userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             if (message.ForwardFromChat == null || message.ForwardFromChat.Type != Telegram.Bot.Types.Enums.ChatType.Channel)
             {
@@ -57,8 +57,12 @@ namespace TelegramStatsBot.Services.Forwarded
 
             await _context.SaveChangesAsync();
 
+            user.CurrentStep = Enums.Onboarding.OnboardingStep.None;
+            user.ChannelDetailsStep = TelegramContentusBot.Enums.ChannelDetails.ChannelDetailsSteps.About;
             user.LastEditedChannelId = channel.Id;
-            await _userService.UpdateUserAsync(user);
+
+            await _context.SaveChangesAsync();
+            _context.Users.Update(user);
 
             return OperationResult<Models.Channel.Channel>.Ok(channel);
         }

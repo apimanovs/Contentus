@@ -31,7 +31,7 @@ namespace TelegramContentusBot.Services.Channel
                 return OperationResult<TelegramStatsBot.Models.Channel.Channel>.Fail("User ID cannot be null.");
             }
 
-            var user = await _userService.GetUserByTelegramIdAsync(userId);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
 
             if (string.IsNullOrWhiteSpace(about))
             { 
@@ -50,6 +50,12 @@ namespace TelegramContentusBot.Services.Channel
 
             _context.Channels.Update(channel);
             await _context.SaveChangesAsync();
+
+            user.ChannelDetailsStep = Enums.ChannelDetails.ChannelDetailsSteps.TargetAudience;
+
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
             return OperationResult<TelegramStatsBot.Models.Channel.Channel>.Ok(channel);
         }
     }

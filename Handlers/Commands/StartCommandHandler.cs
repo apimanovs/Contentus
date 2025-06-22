@@ -15,6 +15,11 @@ namespace TelegramStatsBot.Handlers.Commands
 {
     public class StartCommandHandler : IMessageHandler
     {
+
+        // сделать обработку того что типо вот я пишу данные о канале и нажал
+        // старт чтобы он снова выкинул типо давай вводи данные
+
+
         public string Command => "/start";
 
         private readonly IUserService _userService;

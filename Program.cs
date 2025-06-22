@@ -21,6 +21,9 @@ using TelegramStatsBot.Handlers.Forwarded;
 using TelegramStatsBot.Services;
 using TelegramContentusBot.Interfaces.Forwarded.Channel;
 using TelegramStatsBot.Services.Forwarded;
+using TelegramContentusBot.Interfaces.Channel;
+using TelegramContentusBot.Services.Channel;
+using TelegramContentusBot.Handlers.Channels.Details;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +51,8 @@ builder.Services.AddScoped<ICallbackHandler, GuideStepHandler>();
 builder.Services.AddScoped<ICallbackHandler, GuideSkipHandler>();
 builder.Services.AddScoped<IForwardedMessageHandler, ForwardedMessageHandler>();
 builder.Services.AddScoped<IForwardChannelMessageService, ForwardChannelMessageService>();
+builder.Services.AddScoped<IChannelBriefService, ChannelBriefService>();
+builder.Services.AddScoped<IMessageHandler, ChannelBriefHandler>();
 
 
 builder.Services.AddScoped<MessageDispatcher>();

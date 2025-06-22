@@ -8,7 +8,7 @@ using TelegramStatsBot.Database;
 
 #nullable disable
 
-namespace TelegramStatsBot.Migrations
+namespace TelegramContentusBot.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -112,8 +112,8 @@ namespace TelegramStatsBot.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("LastEditedChannelId")
-                        .HasColumnType("bigint");
+                    b.Property<int?>("LastEditedChannelId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("LastMenuMessageId")
                         .HasColumnType("int");

@@ -53,10 +53,6 @@ namespace TelegramStatsBot.Handlers.Forwarded
 
             await _bot.SendTextMessageAsync(message.Chat.Id, successText);
 
-            user.CurrentStep = Enums.Onboarding.OnboardingStep.None;
-
-            user.ChannelDetailsStep = TelegramContentusBot.Enums.ChannelDetails.ChannelDetailsSteps.About;
-
             var askAboutChannelText = user.Language == "ru"
                 ? "📝 Расскажи немного о своём канале. Например, о чём он, какую цель ты преследуешь и для кого он предназначен."
                 : "📝 Tell us a bit about your channel. For example, what is it about, what's your goal, and who is your target audience?";
