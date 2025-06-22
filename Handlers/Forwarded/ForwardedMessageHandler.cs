@@ -5,6 +5,8 @@ using TelegramStatsBot.Interfaces.Menu.Main;
 using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.User;
 using TelegramStatsBot.Texsts.Menu;
+using Telegram.Bot.Types.Enums;
+using System.Globalization;
 
 namespace TelegramStatsBot.Handlers.Forwarded
 {
@@ -27,7 +29,6 @@ namespace TelegramStatsBot.Handlers.Forwarded
             _mainMenuBuilder = mainMenuBuilder;
             _menuService = menuService;
         }
-
 
         public async Task HandleForwardedAsync(Telegram.Bot.Types.Message message)
         {
@@ -54,16 +55,16 @@ namespace TelegramStatsBot.Handlers.Forwarded
 
             user.CurrentStep = Enums.Onboarding.OnboardingStep.None;
 
+            user.ChannelDetailsStep = TelegramContentusBot.Enums.ChannelDetails.ChannelDetailsSteps.About;
 
-            var hasChannels = await _userService.HasAnyChannels(user.Id);
-
-            var keyboard = _mainMenuBuilder.GetMainMenu(user.Language, hasChannels);
-            var menuText = MenuTexts.GetMainMenuTitle(user.Language, hasChannels);
+            var askAboutChannelText = user.Language == "ru"
+                ? "📝 Расскажи немного о своём канале. Например, о чём он, какую цель ты преследуешь и для кого он предназначен."
+                : "📝 Tell us a bit about your channel. For example, what is it about, what's your goal, and who is your target audience?";
 
             var sent = await _bot.SendTextMessageAsync(
                 chatId: message.Chat.Id,
-                text: menuText,
-                replyMarkup: keyboard
+                text: askAboutChannelText,
+                parseMode: ParseMode.Html
             );
 
             await _menuService.SetLastMenuMessageId(user.TelegramId, sent.MessageId);

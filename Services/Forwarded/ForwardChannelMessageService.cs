@@ -4,6 +4,7 @@ using Telegram.Bot;
 using TelegramContentusBot.Interfaces.Forwarded.Channel;
 using TelegramStatsBot.Database;
 using TelegramStatsBot.Models.Result;
+using TelegramStatsBot.Interfaces.User;
 
 namespace TelegramStatsBot.Services.Forwarded
 {
@@ -11,14 +12,19 @@ namespace TelegramStatsBot.Services.Forwarded
     {
         private readonly ITelegramBotClient _bot;
         private readonly DataContext _context;
-        public ForwardChannelMessageService(ITelegramBotClient bot, DataContext dataContext)
+        private readonly IUserService _userService;
+
+        public ForwardChannelMessageService(ITelegramBotClient bot, DataContext dataContext, IUserService userService)
         {
             _bot = bot;
             _context = dataContext;
+            _userService = userService;
         }
 
         public async Task<OperationResult<Models.Channel.Channel>> ProcessForwardedChannelAsync(Telegram.Bot.Types.Message message, int userId)
         {
+            var user = await _userService.GetUserByTelegramIdAsync(userId);
+
             if (message.ForwardFromChat == null || message.ForwardFromChat.Type != Telegram.Bot.Types.Enums.ChatType.Channel)
             {
                 return OperationResult<Models.Channel.Channel>.Fail("⚠️ Это сообщение не переслано из канала");
@@ -50,6 +56,9 @@ namespace TelegramStatsBot.Services.Forwarded
             _context.Channels.Add(channel);
 
             await _context.SaveChangesAsync();
+
+            user.LastEditedChannelId = channel.Id;
+            await _userService.UpdateUserAsync(user);
 
             return OperationResult<Models.Channel.Channel>.Ok(channel);
         }
