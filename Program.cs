@@ -24,10 +24,18 @@ using TelegramStatsBot.Services.Forwarded;
 using TelegramContentusBot.Interfaces.Channel;
 using TelegramContentusBot.Services.Channel;
 using TelegramContentusBot.Handlers.Channels.Details;
+using TelegramContentusBot.Models.OpenAI;
+using Microsoft.Extensions.Options;
+using TelegramContentusBot.Requests.Posts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var botToken = builder.Configuration["BOT_TOKEN"];
+
+builder.Services.Configure<OpenAiOptions>(builder.Configuration.GetSection("OpenAI"));
+builder.Services.AddSingleton<OpenAiOptions>(sp =>
+    sp.GetRequiredService<IOptions<OpenAiOptions>>().Value);
+
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -53,6 +61,7 @@ builder.Services.AddScoped<IForwardedMessageHandler, ForwardedMessageHandler>();
 builder.Services.AddScoped<IForwardChannelMessageService, ForwardChannelMessageService>();
 builder.Services.AddScoped<IChannelBriefService, ChannelBriefService>();
 builder.Services.AddScoped<IMessageHandler, ChannelBriefHandler>();
+builder.Services.AddScoped<PostGenerationRequest>();
 
 
 builder.Services.AddScoped<MessageDispatcher>();
@@ -76,5 +85,9 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//var scope = app.Services.CreateScope(); 
+//var postGen = scope.ServiceProvider.GetRequiredService<PostGenerationRequest>(); 
+//postGen.GeneratePostAsync(15);
 
 app.Run();
