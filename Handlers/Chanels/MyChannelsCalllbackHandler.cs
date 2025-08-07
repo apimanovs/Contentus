@@ -62,8 +62,27 @@ namespace TelegramContentusBot.Handlers.Chanels
                 return;
             }
 
-            string channelList = string.Join("\n", channels.Select(c => $"{c.ChannelTitle} - {c.Id}"));
-            await _bot.SendTextMessageAsync(chatId, $"Ваши каналы:\n{channelList}");
+            if (channels.Count == 0)
+            {
+                await _bot.SendTextMessageAsync(chatId, "⚠️ У вас нет каналов. Пожалуйста, добавьте канал.");
+                return;
+            }
+
+            var channelList = string.Join("\n\n", channels.Select(c =>
+                $"📣 <b>{c.ChannelTitle}</b> {(string.IsNullOrEmpty(c.ChannelUsername) ? "" : $"(@{c.ChannelUsername})")}\n" +
+                $"🧾 <b>Описание:</b> {(string.IsNullOrEmpty(c.About) ? "—" : c.About)}\n" +
+                $"🎯 <b>Целевая аудитория:</b> {(string.IsNullOrEmpty(c.TargetAudience) ? "—" : c.TargetAudience)}\n" +
+                $"🎯 <b>Цель контента:</b> {(string.IsNullOrEmpty(c.ContentGoal) ? "—" : c.ContentGoal)}\n" +
+                $"🎨 <b>Стиль постов:</b> {(string.IsNullOrEmpty(c.StylePreference) ? "—" : c.StylePreference)}\n" +
+                $"🕐 <b>Привязан:</b> {c.LinkedAt:dd.MM.yyyy}")
+            );
+
+            await _bot.SendTextMessageAsync(
+                chatId,
+                $"<b>Ваш канал:</b>\n\n{channelList}",
+                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+            );
+
 
             var mainMenu = _mainMenuBuilder.GetMainMenu(user.Language, true);
             var sentMenu = await _bot.SendTextMessageAsync(chatId, "Выберите действие:", replyMarkup: mainMenu);
