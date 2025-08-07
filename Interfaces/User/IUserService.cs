@@ -25,5 +25,7 @@
         Task UpdateUserAsync(Models.User.User user);
 
         Task<bool> HasAnyChannels(int userId);
+
+        Task<List<Models.Channel.Channel>> GetUserChannelsById(int userId);
     }
 }
