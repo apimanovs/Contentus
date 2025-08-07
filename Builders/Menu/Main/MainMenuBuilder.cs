@@ -37,11 +37,6 @@ namespace TelegramStatsBot.Builders.Menu
                 },
                 new[] {
                     InlineKeyboardButton.WithCallbackData(
-                        language == "ru" ? "📅 Идеи на неделю" : "📅 Weekly Ideas",
-                        "weekly_ideas")
-                },
-                new[] {
-                    InlineKeyboardButton.WithCallbackData(
                         language == "ru" ? "⚙️ Мои каналы" : "⚙️ My Channels",
                         "my_channels")
                 }

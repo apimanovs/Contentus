@@ -1,9 +1,10 @@
-﻿using TelegramStatsBot.Interfaces.Callback;
-using TelegramStatsBot.Interfaces.User;
+﻿using Telegram.Bot;
+using Telegram.Bot.Types;
+using TelegramStatsBot.Interfaces.Callback;
 using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.Menu.Main;
-using Telegram.Bot;
-using Telegram.Bot.Types;
+using TelegramStatsBot.Interfaces.User;
+using TelegramStatsBot.Texsts.Menu;
 
 namespace TelegramContentusBot.Handlers.Chanels
 {
@@ -83,9 +84,18 @@ namespace TelegramContentusBot.Handlers.Chanels
                 parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
             );
 
+            var hasChannels = await _userService.HasAnyChannels(user.Id);
 
             var mainMenu = _mainMenuBuilder.GetMainMenu(user.Language, true);
-            var sentMenu = await _bot.SendTextMessageAsync(chatId, "Выберите действие:", replyMarkup: mainMenu);
+
+            var menuTitle = MenuTexts.GetMainMenuTitle(user.Language, hasChannels);
+
+            var sentMenu = await _bot.SendTextMessageAsync(
+                chatId: chatId,
+                text: menuTitle,
+                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html,
+                replyMarkup: mainMenu
+            );
 
             await _menuService.SetLastMenuMessageId(telegramId, sentMenu.MessageId);
         }

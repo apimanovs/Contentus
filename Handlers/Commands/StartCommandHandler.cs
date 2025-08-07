@@ -165,6 +165,7 @@ namespace TelegramStatsBot.Handlers.Commands
              var sentMenu = await _bot.SendTextMessageAsync(
                  chatId: chatId,
                  text: menuText,
+                 parseMode: Telegram.Bot.Types.Enums.ParseMode.Html,
                  replyMarkup: menu
              );
 

@@ -19,11 +19,11 @@
             {
                 if (language == "ru")
                 {
-                    return "Главное меню осноевное";
+                    return "🚀 <b>Готовы к новым идеям?</b>\n\nВыбирай, что будем делать дальше! 👇";
                 }
                 else
                 {
-                    return "Main menu осноевное";
+                    return "🚀 <b>Ready to create something awesome?</b>\n\nPick what you'd like to do next! 👇";
                 }
             }
         }
