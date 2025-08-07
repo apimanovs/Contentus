@@ -34,14 +34,33 @@ namespace TelegramContentusBot.Handlers.Chanels
             var chatId = query.Message.Chat.Id;
 
             var user = await _userService.GetUserByTelegramIdAsync(telegramId);
-
             if (user == null)
             {
                 await _bot.AnswerCallbackQueryAsync(query.Id, "❌ User not found");
                 return;
             }
 
+            var lastMenuId = await _menuService.GetLastMenuMessageId(telegramId);
+            if (lastMenuId != null)
+            {
+                try
+                {
+                    await _bot.EditMessageReplyMarkupAsync(
+                        chatId: chatId,
+                        messageId: lastMenuId.Value,
+                        replyMarkup: null
+                    );
+                    await _menuService.ClearLastMenuMessageId(telegramId);
+                }
+                catch { }
+            }
+
             var channels = await _userService.GetUserChannelsById(user.Id);
+            if (channels.Count == 0)
+            {
+                await _bot.SendTextMessageAsync(chatId, "⚠️ У вас нет каналов. Пожалуйста, добавьте канал.");
+                return;
+            }
 
             if (channels.Count == 0)
             {
@@ -49,14 +68,27 @@ namespace TelegramContentusBot.Handlers.Chanels
                 return;
             }
 
-            // Display user's channels
-            string channelList = string.Join("\n", channels.Select(c => $"{c.ChannelTitle} - {c.Id}"));
-            await _bot.SendTextMessageAsync(chatId, $"Ваши каналы:\n{channelList}");
+            var channelList = string.Join("\n\n", channels.Select(c =>
+                $"📣 <b>{c.ChannelTitle}</b> {(string.IsNullOrEmpty(c.ChannelUsername) ? "" : $"(@{c.ChannelUsername})")}\n" +
+                $"🧾 <b>Описание:</b> {(string.IsNullOrEmpty(c.About) ? "—" : c.About)}\n" +
+                $"🎯 <b>Целевая аудитория:</b> {(string.IsNullOrEmpty(c.TargetAudience) ? "—" : c.TargetAudience)}\n" +
+                $"🎯 <b>Цель контента:</b> {(string.IsNullOrEmpty(c.ContentGoal) ? "—" : c.ContentGoal)}\n" +
+                $"🎨 <b>Стиль постов:</b> {(string.IsNullOrEmpty(c.StylePreference) ? "—" : c.StylePreference)}\n" +
+                $"🕐 <b>Привязан:</b> {c.LinkedAt:dd.MM.yyyy}")
+            );
 
-            // Show main menu
+            await _bot.SendTextMessageAsync(
+                chatId,
+                $"<b>Ваш канал:</b>\n\n{channelList}",
+                parseMode: Telegram.Bot.Types.Enums.ParseMode.Html
+            );
+
+
             var mainMenu = _mainMenuBuilder.GetMainMenu(user.Language, true);
-            await _bot.SendTextMessageAsync(chatId, "Выберите действие:", replyMarkup: mainMenu);
+            var sentMenu = await _bot.SendTextMessageAsync(chatId, "Выберите действие:", replyMarkup: mainMenu);
 
+            await _menuService.SetLastMenuMessageId(telegramId, sentMenu.MessageId);
         }
+
     }
 }
