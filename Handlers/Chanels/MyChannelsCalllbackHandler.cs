@@ -34,29 +34,42 @@ namespace TelegramContentusBot.Handlers.Chanels
             var chatId = query.Message.Chat.Id;
 
             var user = await _userService.GetUserByTelegramIdAsync(telegramId);
-
             if (user == null)
             {
                 await _bot.AnswerCallbackQueryAsync(query.Id, "❌ User not found");
                 return;
             }
 
-            var channels = await _userService.GetUserChannelsById(user.Id);
+            var lastMenuId = await _menuService.GetLastMenuMessageId(telegramId);
+            if (lastMenuId != null)
+            {
+                try
+                {
+                    await _bot.EditMessageReplyMarkupAsync(
+                        chatId: chatId,
+                        messageId: lastMenuId.Value,
+                        replyMarkup: null
+                    );
+                    await _menuService.ClearLastMenuMessageId(telegramId);
+                }
+                catch { }
+            }
 
+            var channels = await _userService.GetUserChannelsById(user.Id);
             if (channels.Count == 0)
             {
                 await _bot.SendTextMessageAsync(chatId, "⚠️ У вас нет каналов. Пожалуйста, добавьте канал.");
                 return;
             }
 
-            // Display user's channels
             string channelList = string.Join("\n", channels.Select(c => $"{c.ChannelTitle} - {c.Id}"));
             await _bot.SendTextMessageAsync(chatId, $"Ваши каналы:\n{channelList}");
 
-            // Show main menu
             var mainMenu = _mainMenuBuilder.GetMainMenu(user.Language, true);
-            await _bot.SendTextMessageAsync(chatId, "Выберите действие:", replyMarkup: mainMenu);
+            var sentMenu = await _bot.SendTextMessageAsync(chatId, "Выберите действие:", replyMarkup: mainMenu);
 
+            await _menuService.SetLastMenuMessageId(telegramId, sentMenu.MessageId);
         }
+
     }
 }
