@@ -1,4 +1,4 @@
-﻿namespace TelegramStatsBot.Interfaces.Forward.Handler
+﻿namespace TelegramStatsBot.Interfaces.Handler
 {
     public interface IForwardedMessageHandler
     {

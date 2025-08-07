@@ -8,7 +8,7 @@ using TelegramStatsBot.Database;
 
 #nullable disable
 
-namespace TelegramStatsBot.Migrations
+namespace TelegramContentusBot.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -30,6 +30,12 @@ namespace TelegramStatsBot.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("About")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ChannelDetailsStep")
+                        .HasColumnType("int");
+
                     b.Property<long>("ChannelId")
                         .HasColumnType("bigint");
 
@@ -42,11 +48,23 @@ namespace TelegramStatsBot.Migrations
                     b.Property<string>("ChannelUsername")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ContentGoal")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ExamplePosts")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsBotAdmin")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LinkedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("StylePreference")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TargetAudience")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -65,6 +83,9 @@ namespace TelegramStatsBot.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChannelDetailsStep")
+                        .HasColumnType("int");
 
                     b.Property<long>("ChatId")
                         .HasColumnType("bigint");
@@ -90,6 +111,9 @@ namespace TelegramStatsBot.Migrations
                     b.Property<string>("Language")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("LastEditedChannelId")
+                        .HasColumnType("int");
 
                     b.Property<int?>("LastMenuMessageId")
                         .HasColumnType("int");

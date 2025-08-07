@@ -15,6 +15,11 @@ namespace TelegramStatsBot.Handlers.Commands
 {
     public class StartCommandHandler : IMessageHandler
     {
+
+        // сделать обработку того что типо вот я пишу данные о канале и нажал
+        // старт чтобы он снова выкинул типо давай вводи данные
+
+
         public string Command => "/start";
 
         private readonly IUserService _userService;
@@ -78,7 +83,7 @@ namespace TelegramStatsBot.Handlers.Commands
                 catch { }
             }
 
-            if (string.IsNullOrEmpty(user.Language) || !user.IsLanguageConfirmed)
+            if (string.IsNullOrEmpty(user.Language) || user.IsLanguageConfirmed == false)
             {
                 var systemLang = message.From.LanguageCode?.ToLower() ?? "en";
                 var detectedLang = systemLang.StartsWith("ru") ? "ru" : "en";
@@ -86,8 +91,9 @@ namespace TelegramStatsBot.Handlers.Commands
                 await _userService.SetUserLanguage(telegramId, detectedLang);
 
                 var text = detectedLang == "ru"
-                    ? "👨🏽‍💼 Я помогу тебе отслеживать рост подписчиков, охваты постов и активность аудитории прямо в Telegram.\r\nЯ заметил, что ты говоришь на <b>Русском</b>.\r\nОставим этот язык или выберем английский? 🌍"
-                    : "👨🏽‍💼 I help you track subscriber growth, post reach and engagement — all inside Telegram.\r\nLooks like you're using <b>English</b>.\r\nShall we keep this language or switch to Russian? 🌍";
+                      ? "🧠 Привет! Я — Contentus, ИИ-копирайтер для Telegram-каналов.\r\nМоя работа — помогать тебе создавать посты, придумывать заголовки, улучшать тексты и заполнять контент-план.\r\nЯ могу предложить варианты постов по теме, сократить длинный текст, добавить call-to-action или превратить сухой текст в живой и вовлекающий.\r\n\r\nТы используешь <b>Русский</b>. Оставим его или переключимся на English? 🌍"
+                      : "🧠 Hi! I'm Contentus — an AI copywriter for Telegram channels.\r\nMy job is to help you write posts, generate headlines, improve text, and fill your content calendar.\r\nI can suggest post ideas, shorten long text, add calls to action, or rewrite something to make it more engaging.\r\n\r\nLooks like you're using <b>English</b>. Shall we keep it or switch to Russian? 🌍";
+
 
                 var keyboard = new InlineKeyboardMarkup(new[]
                 {
@@ -119,7 +125,7 @@ namespace TelegramStatsBot.Handlers.Commands
             {
                 var guideText = user.Language == "ru"
                      ? "🧭 Хочешь пройти краткое обучение, чтобы понять как пользоваться ботом?"
-                     : "🧭 Want to go through a short guide on how to use Teleboard?";
+                     : "🧭 Want to go through a short guide on how to use Contentus?";
 
                 var guideMenu = _guideMenuBuilder.GetGuideStartMenu(user.Language);
 
@@ -135,8 +141,26 @@ namespace TelegramStatsBot.Handlers.Commands
                 return;
             }
 
-            var menuText = MenuTexts.GetMainMenuTitle(user.Language);
-            var menu = _menuBuilder.GetMainMenu(user.Language);
+            if (user.CurrentStep == OnboardingStep.AddingChannel)
+            {
+                var text = user.Language == "ru"
+                    ? "📩 Пожалуйста, <b>перешли сюда любое сообщение из своего канала</b> — это поможет мне определить канал и продолжить настройку. Без этого я не смогу работать с твоим контентом."
+                    : "📩 Please <b>forward any message from your channel</b> — this helps me identify your channel and continue the setup. Without it, I can't work with your content.";
+
+                await _bot.SendTextMessageAsync(
+                    chatId,
+                    text,
+                    parseMode: ParseMode.Html
+                );
+
+                return;
+            }
+
+            var hasChannels = await _userService.HasAnyChannels(user.Id);
+
+            var menuText = MenuTexts.GetMainMenuTitle(user.Language, hasChannels);
+
+            var menu = _menuBuilder.GetMainMenu(user.Language, hasChannels);
 
              var sentMenu = await _bot.SendTextMessageAsync(
                  chatId: chatId,

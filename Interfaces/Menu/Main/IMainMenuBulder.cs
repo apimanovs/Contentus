@@ -4,6 +4,6 @@ namespace TelegramStatsBot.Interfaces.Menu.Main
 {
     public interface IMainMenuBuilder
     {
-        InlineKeyboardMarkup GetMainMenu(string language);
+        InlineKeyboardMarkup GetMainMenu(string language, bool hasChannels);
     }
 }

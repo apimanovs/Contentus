@@ -9,6 +9,7 @@ using TelegramStatsBot.Interfaces.Menu;
 using TelegramStatsBot.Interfaces.Menu.Main;
 using TelegramStatsBot.Enums.Onboarding;
 using Microsoft.IdentityModel.Tokens;
+using TelegramStatsBot.Texsts.Menu;
 
 namespace TelegramStatsBot.Handlers.Guide
 {
@@ -48,34 +49,40 @@ namespace TelegramStatsBot.Handlers.Guide
             {
                 case 1:
                     text = user.Language == "ru"
-                        ? "📌 <b>Шаг 1</b>\nДобавь Teleboard в администраторы своего канала..."
-                        : "📌 <b>Step 1</b>\nAdd Teleboard to your channel admins...";
+                        ? "👋 <b>Добро пожаловать в Contentus!</b>\n\nЯ помогу тебе создавать посты, которые будут цеплять твою аудиторию. Всё просто: ты рассказываешь про канал — я генерирую идеи и тексты.\n\n<b>Начнём?</b>"
+                        : "👋 <b>Welcome to Contentus!</b>\n\nI help you create posts that grab attention and match your channel’s vibe. You tell me about your channel — I generate ideas and content.\n\n<b>Let’s begin?</b>";
                     keyboard = _menuBuilder.GetStepKeyboard(1, user.Language);
                     break;
 
                 case 2:
                     text = user.Language == "ru"
-                        ? "📊 <b>Шаг 2</b>\nЯ собираю важные метрики твоего канала..."
-                        : "📊 <b>Step 2</b>\nI track your channel's key metrics...";
+                        ? "🧠 <b>Шаг 1</b>\nContentus пишет под твой стиль. Для этого мне нужно понять, о чём твой канал и кому ты пишешь.\n\n💬 Расскажи: тематика, ниша, пример поста — всё, что покажет твою подачу."
+                        : "🧠 <b>Step 1</b>\nContentus writes in your style. To do that, I need to understand what your channel is about and who you’re writing for.\n\n💬 Tell me: topic, niche, example posts — anything that shows your vibe.";
                     keyboard = _menuBuilder.GetStepKeyboard(2, user.Language);
                     break;
 
                 case 3:
                     text = user.Language == "ru"
-                        ? "📅 <b>Шаг 3</b>\nТы можешь планировать публикации..."
-                        : "📅 <b>Step 3</b>\nYou can schedule posts...";
+                        ? "🎯 <b>Шаг 2</b>\nКакая цель у твоего контента?\n\nПродажи? Вовлечение? Личный бренд? Я подстроюсь под задачу, если ты скажешь, чего хочешь."
+                        : "🎯 <b>Step 2</b>\nWhat’s the goal of your content?\n\nSales? Engagement? Personal brand? I’ll tailor the tone and structure if you tell me what you’re aiming for.";
                     keyboard = _menuBuilder.GetStepKeyboard(3, user.Language);
                     break;
 
                 case 4:
-                    user.HasSeenGuide = true;
-                    user.CurrentStep = OnboardingStep.AwaitingChannelLink;
+                    text = user.Language == "ru"
+                        ? "🧩 <b>Шаг 3</b>\nТеперь немного о подаче.\n\nХочешь звучать серьёзно, легко, с юмором или дерзко? Я подстрою тексты под нужный стиль."
+                        : "🧩 <b>Step 3</b>\nNow, let’s talk tone.\n\nDo you want to sound serious, casual, witty, or bold? I’ll match the style when writing posts.";
+                    keyboard = _menuBuilder.GetStepKeyboard(4, user.Language);
+                    break;
 
+                case 5:
+                    user.HasSeenGuide = true;
+                    user.CurrentStep = OnboardingStep.AddingChannel;
                     await _userService.UpdateUserAsync(user);
 
                     text = user.Language == "ru"
-                        ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
-                        : "✅ <b>All done!</b>\nYou can now use all features of Teleboard!";
+                                    ? "✅ <b>Обучение пройдено!</b>\nТеперь давай расскажи мне немного о твоём канале, чтобы я мог создавать контент именно под него."
+                                    : "✅ <b>You're all set!</b>\nNow tell me a bit about your channel so I can start generating content tailored to it.";
 
                     await _bot.EditMessageTextAsync(
                         chatId: chatId,
@@ -87,15 +94,17 @@ namespace TelegramStatsBot.Handlers.Guide
 
                     await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);
 
-                    var askChannelText = user.Language == "ru"
-                        ? "📥 Перешли любое сообщение из своего канала, где я уже добавлен в администраторы. Так я смогу начать сбор статистики. Это важно. Не ленись."
-                        : "📥 Please forward *any* message from your channel where I’m already an admin. This is how I can start tracking stats. Don’t make it weird.";
+                    text = user.Language == "ru"
+                        ? "📩 Пришли <b>пересланное сообщение</b> из своего канала. Это поможет мне собрать информацию и продолжить настройку."
+                        : "📩 Please forward a <b>message from your channel</b>. This will help me gather info and proceed.";
 
-
-                    await _bot.SendTextMessageAsync(chatId, askChannelText);
+                    await _bot.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: text,
+                        parseMode: ParseMode.Html
+                    );
 
                     return;
-
 
                 default:
                     text = "❌ Unknown step.";

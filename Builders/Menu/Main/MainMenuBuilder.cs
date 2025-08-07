@@ -14,29 +14,37 @@ namespace TelegramStatsBot.Builders.Menu
             _bot = bot;
         }
 
-        public InlineKeyboardMarkup GetMainMenu(string language)
+        public InlineKeyboardMarkup GetMainMenu(string language, bool hasChannels)
         {
-            var isRu = language == "ru";
+            if (!hasChannels)
+            {
+                return new InlineKeyboardMarkup(new[]
+                {
+                    new[] {
+                        InlineKeyboardButton.WithCallbackData(
+                            language == "ru" ? "➕ Добавить канал" : "➕ Add Channel",
+                            "add_channel:start")
+                    }
+                });
+            }
 
             return new InlineKeyboardMarkup(new[]
             {
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
-                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
-                },                
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
-                },                
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
-                },                
-                new[]
-                {
-                    InlineKeyboardButton.WithCallbackData(isRu ? "Кнопка" : "Some button", "menu_add"),
+                new[] {
+                    InlineKeyboardButton.WithCallbackData(
+                        language == "ru" ? "📝 Генерация поста" : "📝 Generate Post",
+                        "gen_post")
                 },
+                new[] {
+                    InlineKeyboardButton.WithCallbackData(
+                        language == "ru" ? "📅 Идеи на неделю" : "📅 Weekly Ideas",
+                        "weekly_ideas")
+                },
+                new[] {
+                    InlineKeyboardButton.WithCallbackData(
+                        language == "ru" ? "⚙️ Мои каналы" : "⚙️ My Channels",
+                        "my_channels")
+                }
             });
         }
     }

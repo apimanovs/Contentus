@@ -16,13 +16,15 @@ public class GuideSkipHandler : ICallbackHandler
     private readonly IUserService _userService;
     private readonly IMainMenuBuilder _menuBuilder;
     private readonly IMenuService _menuService;
+    private readonly IMainMenuBuilder _mainMenuBuilder;
 
-    public GuideSkipHandler(ITelegramBotClient bot, IUserService userService, IMainMenuBuilder menuBuilder, IMenuService menuService)
+    public GuideSkipHandler(ITelegramBotClient bot, IUserService userService, IMainMenuBuilder menuBuilder, IMenuService menuService, IMainMenuBuilder mainMenuBuilder)
     {
         _bot = bot;
         _userService = userService;
         _menuBuilder = menuBuilder;
         _menuService = menuService;
+        _mainMenuBuilder = mainMenuBuilder;
     }
 
     public async Task HandleAsync(CallbackQuery query)
@@ -34,26 +36,29 @@ public class GuideSkipHandler : ICallbackHandler
         user.HasSeenGuide = true;
         await _userService.UpdateUserAsync(user);
 
-        user.CurrentStep = OnboardingStep.AwaitingChannelLink;
+        user.CurrentStep = OnboardingStep.AddingChannel;
         await _userService.UpdateUserAsync(user);
 
-        var askChannelText = user.Language == "ru"
-            ? "📥 Перешли сообщение из канала, где я админ. Так я начну сбор статистики. Без этого меню будет бесполезным."
-            : "📥 Please forward a message from the channel where I’m admin. Otherwise, this menu is just for show.";
-
-        await _bot.SendTextMessageAsync(chatId, askChannelText);
-
-
-        var text = user.Language == "ru"
-            ? "✅ <b>Готово!</b>\nТеперь ты можешь использовать все функции Teleboard!"
-            : "✅ <b>All done!</b>\nYou can now use all features of Teleboard!";
+        var confirmationText = user.Language == "ru"
+                    ? "✅ <b>Обучение пропущено!</b>\nТеперь давай расскажи немного о своём канале, чтобы я мог начать помогать с контентом."
+                    : "✅ <b>Guide skipped!</b>\nNow tell me a bit about your channel so I can start helping you with content.";
 
         await _bot.EditMessageTextAsync(
             chatId: chatId,
             messageId: query.Message.MessageId,
-            text: text,
+            text: confirmationText,
             parseMode: ParseMode.Html,
             replyMarkup: null
+        );
+
+        var text = user.Language == "ru"
+                                ? "📩 Пришли <b>пересланное сообщение</b> из своего канала. Это поможет мне собрать информацию и продолжить настройку."
+                                : "📩 Please forward a <b>message from your channel</b>. This will help me gather info and proceed.";
+
+        await _bot.SendTextMessageAsync(
+            chatId: chatId,
+            text: text,
+            parseMode: ParseMode.Html
         );
 
         await _menuService.SetLastMenuMessageId(telegramId, query.Message.MessageId);
