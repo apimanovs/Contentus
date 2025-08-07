@@ -1,39 +1,73 @@
-# 📝 Contentus — Your AI Content Assistant for Telegram
+# 📝 Contentus — Telegram AI Post Generator Bot
 
-Welcome to **Contentus** — a clean, focused, AI-powered assistant for Telegram creators who want **to write more, think less**, and never stare at a blinking cursor again.
-
-Whether you're a solo channel admin, a content marketer, or managing multiple brands — Contentus turns chaotic idea-juggling into confident, fast execution. Right inside Telegram.
+> ⚠️ This is an unfinished pet project. Around 60% of the planned features have been cut. But hey — it still works, and it's kinda cool.
 
 ---
 
-## 🎯 What is Contentus?
+## 🚧 What is this?
 
-**Contentus** is a Telegram bot powered by GPT that helps you:
+**Contentus** is a Telegram bot that I started building as a personal experiment.  
+It was meant to be a full-featured AI assistant for Telegram channel creators — but in the end, I kept just the essentials:
 
-- ✍️ Generate post ideas tailored to your niche  
-- 🧠 Write full posts based on your channel style  
-- 🪄 Rewrite and enhance drafts with CTAs, humor, or clarity  
-- 📅 Plan a week’s worth of content in seconds  
-- 🔁 Adapt one post across multiple Telegram channels
+- ✍️ You can generate posts using AI (OpenAI GPT)  
+- 📌 You can link your Telegram channel  
+- 🧾 You can add example posts so the bot learns your tone
 
-It’s like a copywriter that doesn’t charge hourly.
-
----
-
-## 👤 Who it's for
-
-- Telegram **channel admins**  
-- Freelance **copywriters** managing multiple clients  
-- **SMM teams** with 5 deadlines and 0 inspiration  
-- Anyone who thought: _“If only someone wrote this post for me…”_
+That’s it. No admin panel, no scheduling, no tracking. Just post generation — fast and simple.
 
 ---
 
-## ⚙️ Tech Stack
+## 🧪 Why it exists
 
-- **.NET / C#**  
-- **Telegram Bot API**  
-- **OpenAI GPT-4 / GPT-3.5**  
-- Optionally: **Anthropic Claude API**  
-- Data: **SQLite** (for MVP), PostgreSQL later
+I was curious about how Telegram bots, OpenAI, and .NET could work together. I had big plans… and then lost interest halfway through 😅
 
+The truth is:
+
+- 🧱 I didn’t care about architecture — I didn’t really know what that was  
+- 🧠 I was still learning C# and backend dev  
+- 💡 I just wanted to see something *run* — and it did!
+
+Now the bot just sits here, generating posts with surprising quality based on the linked channel info.
+
+---
+
+## 🛠 Features (implemented)
+
+- Link a Telegram channel  
+- Add example posts / channel description  
+- Generate AI-written content based on your channel’s style  
+- Use HTML formatting for better output in Telegram
+
+---
+
+## 🚫 What’s missing (and probably won’t happen)
+
+- Weekly idea planner  
+- Rewrite/Enhance/Edit tools  
+- Multi-channel management  
+- Proper security, validation, architecture, scalability... 😅
+
+---
+
+## 🧰 Tech Stack
+
+- **C# / .NET**
+- **Telegram Bot API**
+- **OpenAI GPT-4 / GPT-3.5**
+- **SQLite** (for MVP) → maybe PostgreSQL one day
+
+---
+
+## 🤷‍♂️ Status
+
+**Unmaintained.**  
+I’m no longer actively working on this bot, but it still works as a minimal AI helper inside Telegram.
+
+Feel free to fork, rewrite, improve, or just peek into the code and laugh at my early developer phase 😄
+
+---
+
+## 💬 Final Thought
+
+> It might be unfinished, but it helped me finish something: learning.  
+> And sometimes, that's enough.
